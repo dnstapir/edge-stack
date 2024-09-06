@@ -1,12 +1,12 @@
 NAME=		xyzzy
 
-JWS_PRIVKEY=	keys/jws-private.key
+JWS_PRIVKEY=	keys/jws.key
 JWS_PUBKEY=	keys/jws-public.key
 
 TLS_CSR=	keys/tls.csr
 TLS_CERT=	keys/tls.crt
+TLS_PRIVKEY=	keys/tls.key
 TLS_PUBKEY=	keys/tls-public.key
-TLS_PRIVKEY=	keys/tls-private.key
 
 CLEANFILES=	$(CSR) $(CERT) $(KEY)
 

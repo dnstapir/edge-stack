@@ -1,11 +1,11 @@
 NAME=		xyzzy
 
 JWS_PRIVKEY=	$(NAME)-jws-private.key
-JWS_PUBKEY=		$(NAME)-jws-public.key
+JWS_PUBKEY=	$(NAME)-jws-public.key
 
-PKI_CSR=		$(NAME)-pki.csr
-PKI_CERT=		$(NAME)-pki.crt
-PKI_PUBKEY=		$(NAME)-pki-public.key
+PKI_CSR=	$(NAME)-pki.csr
+PKI_CERT=	$(NAME)-pki.crt
+PKI_PUBKEY=	$(NAME)-pki-public.key
 PKI_PRIVKEY=	$(NAME)-pki-private.key
 
 CLEANFILES= $(CSR) $(CERT) $(KEY)

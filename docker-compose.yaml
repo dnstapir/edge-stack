@@ -1,0 +1,26 @@
+networks:
+  internal:
+    ipam:
+      driver: default
+      config:
+        - subnet: "10.53.0.0/24"
+
+services:
+  resolver:
+    image: ghcr.io/dnstapir/unbound:latest
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 443:443/tcp
+      - 443:443/udp
+      - 853:853/tcp
+    volumes:
+      - ./unbound/local.d/access-control.conf:/etc/unbound/local.d/access-control.conf:ro
+      - ./unbound/conf.d/dnstap.conf:/etc/unbound/conf.d/dnstap.conf:ro
+    networks:
+      internal:
+        ipv4_address: 10.53.0.10
+    deploy:
+      resources:
+        limits:
+          memory: 4G

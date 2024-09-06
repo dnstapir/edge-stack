@@ -18,6 +18,9 @@ bootstrap: $(JWS_PRIVKEY) $(TLS_CSR)
 
 csr: $(TLS_CSR)
 
+renew:
+	step ca renew $(TLS_CERT) $(TLS_PRIVKEY)
+
 keys:
 	-mkdir $@
 

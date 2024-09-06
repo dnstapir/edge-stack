@@ -19,7 +19,7 @@ bootstrap: $(JWS_PRIVKEY) $(TLS_CSR)
 csr: $(TLS_CSR)
 
 keys:
-	-mkdir @keys
+	-mkdir $@
 
 $(JWS_PRIVKEY): keys
 	step crypto keypair $(JWS_PUBKEY) $(JWS_PRIVKEY) --insecure --no-password --kty EC --crv P-256

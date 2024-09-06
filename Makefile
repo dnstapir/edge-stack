@@ -1,43 +1,46 @@
 NAME=		xyzzy
 
-JWS_PRIVKEY=	$(NAME)-jws-private.key
-JWS_PUBKEY=	$(NAME)-jws-public.key
+JWS_PRIVKEY=	keys/jws-private.key
+JWS_PUBKEY=	keys/jws-public.key
 
-PKI_CSR=	$(NAME)-pki.csr
-PKI_CERT=	$(NAME)-pki.crt
-PKI_PUBKEY=	$(NAME)-pki-public.key
-PKI_PRIVKEY=	$(NAME)-pki-private.key
+TLS_CSR=	keys/tls.csr
+TLS_CERT=	keys/tls.crt
+TLS_PUBKEY=	keys/tls-public.key
+TLS_PRIVKEY=	keys/tls-private.key
 
-CLEANFILES= $(CSR) $(CERT) $(KEY)
+CLEANFILES=	$(CSR) $(CERT) $(KEY)
 
 
 all:
 
-bootstrap: $(JWS_PRIVKEY) $(PKI_CSR)
-	step certificate inspect $(PKI_CSR)
+bootstrap: $(JWS_PRIVKEY) $(TLS_CSR)
+	step certificate inspect $(TLS_CSR)
 
-csr: $(PKI_CSR)
+csr: $(TLS_CSR)
 
-$(JWS_PRIVKEY):
+keys:
+	-mkdir @keys
+
+$(JWS_PRIVKEY): keys
 	step crypto keypair $(JWS_PUBKEY) $(JWS_PRIVKEY) --insecure --no-password --kty EC --crv P-256
 
-$(PKI_PRIVKEY):
-	step crypto keypair $(PKI_PUBKEY) $(PKI_PRIVKEY) --insecure --no-password --kty EC --crv P-256
+$(TLS_PRIVKEY): keys
+	step crypto keypair $(TLS_PUBKEY) $(TLS_PRIVKEY) --insecure --no-password --kty EC --crv P-256
 
-$(PKI_CSR): $(PKI_PRIVKEY)
-	step certificate create $(NAME) $(PKI_CSR) --key $(PKI_PRIVKEY) --csr --insecure --no-password
+$(TLS_CSR): $(TLS_PRIVKEY)
+	step certificate create $(NAME) $(TLS_CSR) --key $(TLS_PRIVKEY) --csr --insecure --no-password
 
-openssl-boostrap:
+openssl-boostrap: keys
 	openssl ecparam -name prime256v1 -genkey -noout -out $(JWS_PRIVKEY)
 	openssl ec -in $(JWS_PRIVKEY) -pubout -out $(JWS_PUBKEY)
-	openssl ecparam -name prime256v1 -genkey -noout -out $(PKI_PRIVKEY)
-	openssl ec -in $(PKI_PRIVKEY) -pubout -out $(PKI_PUBKEY)
-	openssl req -new -out $(PKI_CSR) -key $(PKI_PRIVKEY) -subj "/CN=$(NAME)" -nodes
-	openssl req -noout -text -in xyzzy-pki.csr $(PKI_CSR)
+	openssl ecparam -name prime256v1 -genkey -noout -out $(TLS_PRIVKEY)
+	openssl ec -in $(TLS_PRIVKEY) -pubout -out $(TLS_PUBKEY)
+	openssl req -new -out $(TLS_CSR) -key $(TLS_PRIVKEY) -subj "/CN=$(NAME)" -nodes
+	openssl req -noout -text -in xyzzy-pki.csr $(TLS_CSR)
 
 clean:
-	rm -f $(PKI_CSR)
+	rm -f $(TLS_CSR)
 
 realclean: clean
-	rm -f $(PKI_PUBKEY) $(PKI_PRIVKEY) $(PKI_CERT)
+	rm -f $(TLS_PUBKEY) $(TLS_PRIVKEY) $(TLS_CERT)
 	rm -f $(JWS_PRIVKEY) $(JWS_PUBKEY)

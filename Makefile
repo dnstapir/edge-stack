@@ -14,6 +14,7 @@ CLEANFILES= $(CSR) $(CERT) $(KEY)
 all:
 
 bootstrap: $(JWS_PRIVKEY) $(PKI_CSR)
+	step certificate inspect $(PKI_CSR)
 
 csr: $(PKI_CSR)
 
@@ -32,6 +33,7 @@ openssl-boostrap:
 	openssl ecparam -name prime256v1 -genkey -noout -out $(PKI_PRIVKEY)
 	openssl ec -in $(PKI_PRIVKEY) -pubout -out $(PKI_PUBKEY)
 	openssl req -new -out $(PKI_CSR) -key $(PKI_PRIVKEY) -subj "/CN=$(NAME)" -nodes
+	openssl req -noout -text -in xyzzy-pki.csr $(PKI_CSR)
 
 clean:
 	rm -f $(PKI_CSR)

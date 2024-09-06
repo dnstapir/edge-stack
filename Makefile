@@ -26,6 +26,13 @@ $(PKI_PRIVKEY):
 $(PKI_CSR): $(PKI_PRIVKEY)
 	step certificate create $(NAME) $(PKI_CSR) --key $(PKI_PRIVKEY) --csr --insecure --no-password
 
+openssl-boostrap:
+	openssl ecparam -name prime256v1 -genkey -noout -out $(JWS_PRIVKEY)
+	openssl ec -in $(JWS_PRIVKEY) -pubout -out $(JWS_PUBKEY)
+	openssl ecparam -name prime256v1 -genkey -noout -out $(PKI_PRIVKEY)
+	openssl ec -in $(PKI_PRIVKEY) -pubout -out $(PKI_PUBKEY)
+	openssl req -new -out $(PKI_CSR) -key $(PKI_PRIVKEY) -subj "/CN=$(NAME)" -nodes
+
 clean:
 	rm -f $(PKI_CSR)
 

@@ -12,8 +12,6 @@ TLS_CERT=	keys/tls.crt
 TLS_PRIVKEY=	keys/tls.key
 TLS_PUBKEY=	keys/tls-public.key
 
-CLEANFILES=	$(CSR) $(CERT) $(KEY)
-
 
 all:
 
@@ -53,5 +51,5 @@ clean:
 	rm -f $(TLS_CSR)
 
 realclean: clean
-	rm -f $(TLS_PUBKEY) $(TLS_PRIVKEY) $(TLS_CERT)
+	rm -f $(TLS_PUBKEY) $(TLS_PRIVKEY) $(TLS_CERT) $(TLS_CA_CERT)
 	rm -f $(JWS_PRIVKEY) $(JWS_PUBKEY)

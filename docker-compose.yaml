@@ -24,3 +24,48 @@ services:
       resources:
         limits:
           memory: 4G
+  edm-init:
+    image: busybox
+    volumes:
+      - edm-data:/var/lib/edm
+    command: chown -v 65532:65532 /var/lib/edm
+  edm:
+    image: ghcr.io/dnstapir/edm:latest
+    volumes:
+      - ./keys:/etc/dnstapir/keys:ro
+      - ./edm/config:/etc/dnstapir/edm:ro
+      - edm-data:/var/lib/edm
+    networks:
+      internal:
+        ipv4_address: 10.53.0.11
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    command:
+     - run
+     - --input-tcp=10.53.0.11:53535
+     - --minimiser-workers=3
+     - --disable-session-files
+     - --disable-histogram-sender
+     - --config=/etc/dnstapir/edm/edm.toml
+     - --well-known-domains=/etc/dnstapir/edm/well-known-domains.dawg
+     - --mqtt-signing-key-file=/etc/dnstapir/keys/jws.key
+     - --mqtt-signing-key-id=${NAME}
+     - --mqtt-ca-file=/etc/dnstapir/keys/ca.crt
+     - --mqtt-client-cert-file=/etc/dnstapir/keys/tls.crt
+     - --mqtt-client-key-file=/etc/dnstapir/keys/tls.key
+     - --mqtt-server=tls://mqtt.dev.dnstapir.se:8883
+     - --mqtt-topic=events/up/${NAME}/edm
+     - --mqtt-client-id=${NAME}-edm-pub
+     - --http-url=https://aggregates.dev.dnstapir.se
+     - --http-signing-key-file=/etc/dnstapir/keys/jws.key
+     - --http-client-cert-file=/etc/dnstapir/keys/tls.crt
+     - --http-client-key-file=/etc/dnstapir/keys/tls.key
+     - --http-signing-key-id=${NAME}
+    depends_on:
+     edm-init:
+       condition: service_completed_successfully
+
+volumes:
+  edm-data:

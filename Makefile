@@ -1,8 +1,12 @@
 NAME=		xyzzy
 
+CA_URL=		https://step.dev.dnstapir.se:9000
+CA_FINGERPRINT=	e251913b8e39765ac5ae0cb6782a892ac0af800d703c509a70c19bf3a8a0b73e
+
 JWS_PRIVKEY=	keys/jws.key
 JWS_PUBKEY=	keys/jws-public.key
 
+TLS_CA_CERT=	keys/ca.crt
 TLS_CSR=	keys/tls.csr
 TLS_CERT=	keys/tls.crt
 TLS_PRIVKEY=	keys/tls.key
@@ -13,10 +17,11 @@ CLEANFILES=	$(CSR) $(CERT) $(KEY)
 
 all:
 
-bootstrap: $(JWS_PRIVKEY) $(TLS_CSR)
+bootstrap: $(JWS_PRIVKEY) $(TLS_CSR) $(TLS_CA_CERT)
 	step certificate inspect $(TLS_CSR)
 
 csr: $(TLS_CSR)
+
 
 renew:
 	step ca renew $(TLS_CERT) $(TLS_PRIVKEY)
@@ -32,6 +37,9 @@ $(TLS_PRIVKEY): keys
 
 $(TLS_CSR): $(TLS_PRIVKEY)
 	step certificate create $(NAME) $(TLS_CSR) --key $(TLS_PRIVKEY) --csr --insecure --no-password
+
+$(TLS_CA_CERT):
+	step ca root --ca-url=$(CA_URL) --fingerprint $(CA_FINGERPRINT) > $@
 
 openssl-boostrap: keys
 	openssl ecparam -name prime256v1 -genkey -noout -out $(JWS_PRIVKEY)

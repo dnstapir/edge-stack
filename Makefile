@@ -12,10 +12,13 @@ TLS_CERT=	keys/tls.crt
 TLS_PRIVKEY=	keys/tls.key
 TLS_PUBKEY=	keys/tls-public.key
 
+COMPOSE_ENV=	.env
+
+EDM_TOML=	edm/config/edm.toml
 
 all:
 
-bootstrap: $(JWS_PRIVKEY) $(TLS_CSR) $(TLS_CA_CERT)
+bootstrap: $(JWS_PRIVKEY) $(TLS_CSR) $(TLS_CA_CERT) $(COMPOSE_ENV) $(EDM_TOML)
 	step certificate inspect $(TLS_CSR)
 
 csr: $(TLS_CSR)
@@ -48,8 +51,17 @@ openssl-boostrap: keys
 	openssl req -noout -text -in xyzzy-pki.csr $(TLS_CSR)
 
 clean:
-	rm -f $(TLS_CSR)
+	rm -f $(TLS_CSR) $(COMPOSE_ENV) $(EDM_TOML)
 
 realclean: clean
 	rm -f $(TLS_PUBKEY) $(TLS_PRIVKEY) $(TLS_CERT) $(TLS_CA_CERT)
 	rm -f $(JWS_PRIVKEY) $(JWS_PUBKEY)
+
+edm:
+	mkdir -p $@/config
+
+$(EDM_TOML): edm
+	@echo cryptopan-key = \"$(shell openssl rand -base64 15)\" > $@
+
+$(COMPOSE_ENV):
+	echo NAME=$(NAME) > $@

@@ -1,0 +1,21 @@
+# manually maintained
+
+# policies ONLY affect GREYLISTED sources. whitelisted and blacklisted
+# sources go stright into (or not) the resulting RPZ
+# known actions: passthru, drop, nxdomain, nodata, tapir, police
+policy:
+   logfile:		/var/log/dnstapir/tem-policy.log
+   whitelist:
+      action:		PASSTHRU
+   blacklist:
+      action:		NODATA	# present in any blacklist->action
+   greylist:
+      numsources:	# present in this or more sources->action
+         limit:		1 
+         action:	NXDOMAIN
+      numtapirtags:     # more tags than limit ->action
+         limit:		3
+         action:	NXDOMAIN
+      blacktapir:	# any of these->action
+         tags:		[ likelymalware, badip ]
+         action:	REDIRECT

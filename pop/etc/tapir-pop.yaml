@@ -1,0 +1,97 @@
+# manually maintained
+
+cli:
+   tapir-pop:
+      url:	https://127.0.0.1:9099/api/v1
+      tlsurl:	https://127.0.0.1:9098/api/v1
+#      tlsurl:	https://77.72.231.135:5454/api/v1
+      apikey:	be-nice-to-a-bad-tempered-tapir
+   tapir-slogger:
+      url:	https://127.0.0.1:8080/api/v1
+      tlsurl:	https://127.0.0.1:8081/api/v1
+#      tlsurl:	https://77.72.231.135:5454/api/v1
+      apikey:	hogwarts-had-a-boggert-we-have-a-sloggert
+   tapir-edm:
+      tlsurl:	https://127.0.0.1:9090/
+
+services:
+   reaper:
+      interval:	60 # seconds, time between runs of deleting expired data
+   rpz:
+      zonename:		rpz.
+      primary:		127.0.0.1:5359	# must be an address that the dnsengine listens to
+      serialcache:	/etc/dnstapir/rpz-serial.txt
+   refreshengine:
+      active:		true
+      name:		TEM Source Refresher
+
+apiserver:
+   active:		true
+   name:		TAPIR-POP API Server
+   key:			be-nice-to-a-bad-tempered-tapir
+   addresses:		[ 127.0.0.1:9099 ]
+   tlsaddresses:	[ 127.0.0.1:9098 ]
+
+dnsengine:
+   active:		true
+   name:		TAPIR-POP DNS Engine
+   logfile:		/var/log/dnstapir/pop-dnsengine.log
+   addresses:		[ 127.0.0.1:5360 ]
+
+bootstrapserver:
+   active:		false
+   name:		TAPIR-POP Bootstrap Server
+   addresses:		[]
+   tlsaddresses:	[]
+
+tapir:
+   mqtt:
+      logfile:		/var/log/dnstapir/pop-mqtt.log
+      server:		tls://mqtt.dev.dnstapir.se:8883
+      clientid:		leon
+      cacert:           /etc/dnstapir/certs/ca.crt
+      clientcert:       /etc/dnstapir/certs/tls.crt
+      clientkey:        /etc/dnstapir/certs/tls.key
+      qos:              2
+
+   observations:
+      topic:            events/up/axfr/observations
+      validatorkey:     /etc/dnstapir/certs/jws-public.key
+
+   config:
+      topic:            config/down/tem
+      validatorkey:     /etc/dnstapir/certs/jws-public.key
+
+   status:
+      topic:            status/up/axfr/tapir-pop
+      signingkey:	/etc/dnstapir/certs/jws.key
+
+   general:
+      topic:            events/down/tem/general
+      validatorkey:     /etc/dnstapir/certs/jws-public.key
+
+# service:
+#    name:	foobar
+#    verbose:	true
+#    debug:	true
+
+# redirects:
+#    tapir:	landing-page.dnstapir.se
+#    police:	www.polisen.se
+
+certs:
+   expirationwarning: 200 # days before actual expiration
+   certdir:	/etc/dnstapir/certs
+   cacertfile:	/etc/dnstapir/certs/ca.crt
+   tapir-pop:
+      cert:	/etc/dnstapir/certs/tls.crt
+      key:	/etc/dnstapir/certs/tls.key
+   tapir-cli:
+      cert:	/etc/dnstapir/certs/tls.crt
+      key:	/etc/dnstapir/certs/tls.key
+
+log:
+   file:	/var/log/dnstapir/tapir-pop.log
+   mode:	debug # debug | normal
+   verbose:	true
+   debug:	true

@@ -1,0 +1,4 @@
+# CONTENT: TAPIR-INTELLIGENCE-V1
+bad.stuff:	new-domain, high-volume
+other.stuff:	high-volume
+third.stuff:	high-volume, bad-ip

@@ -1,0 +1,6 @@
+# CONTENT: DOMAIN-LIST
+google.com
+youtube.com
+dn.se
+svd.se
+polisen.se

@@ -1,0 +1,121 @@
+# manually maintained
+
+src:
+   style:	newstyle
+
+sources:
+   tapir1:
+      active:		true
+      name:		dns-tapir	# Must have EXACTLY this name!
+      description:	DNS TAPIR main intelligence feed
+      type:		greylist
+      source:		mqtt
+      topic:		events/down/tem/general
+      validatorkey:	/etc/dnstapir/certs/jws-public.key
+      format:		tapir-msg-v1
+      bootstrap:	[ 77.72.231.135:5454 ]
+      bootstrapurl:	https://%s/api/v1
+      bootstrapkey:	be-nice-to-a-bad-tempered-tapir
+   tapir2:
+      active:		true
+      name:		dns-tapir	# Must have EXACTLY this name!
+      description:	DNS TAPIR local test topic, still feeds into same TEM list
+      type:		greylist
+      source:		mqtt
+      topic:		events/up/johani/observations
+      validatorkey:	/etc/dnstapir/certs/jws-public.key
+      format:		tapir-msg-v1
+   rpz1:
+      active:		true	# only "true" is affirmative
+      name:		rpz.threat-feed.com
+      description:	Commercial RPZ feed from threat-feed.com
+      type:		greylist
+      source:		xfr
+      zone:		rpz.threat-feed.com
+      upstream:		nsa.johani.org:53
+      format:		rpz
+   rpz2:
+      active:		true
+      name:		rpz.axfr.net
+      description:	Test RPZ feed from axfr.net
+      type:		greylist
+      source:		xfr
+      zone:		rpz.axfr.net
+      upstream:		nsa.johani.org:53
+      format:		rpz
+   txt1:
+      active:		false
+      name:		black-as-sin
+      description:	"Locally maintained blacklisted domain names"
+      type:		blacklist
+      source:		file
+#      format:		dawg
+#      filename:	/var/tmp/dnstapir/black-as-sin.dawg
+      format:		domains
+      filename:		/var/tmp/dnstapir/black-as-sin.txt
+   txt2:
+      active:		false
+      name:		white-and-shiny
+      description:	"Locally maintained whitelisted domain names"
+      type:		whitelist
+      source:		file
+#      format:		dawg
+#      filename:	/var/tmp/dnstapir/black-as-sin.dawg
+      format:		domains
+      filename:		/var/tmp/dnstapir/white-and-shiny.txt
+   txt3:
+      active:		false
+      name:		names-from-the-tar-pit
+      description:	"Locally maintained blacklisted domain names"
+      type:		blacklist
+      source:		file
+      format:		domains
+      filename:		/var/tmp/dnstapir/names-from-the-tar-pit.txt
+   txt4:
+      active:		false
+      name:		1M-names-from-well-known
+#      name:		500-names-from-well-known
+      description:	"Locally maintained blacklisted domain names"
+      type:		blacklist
+      source:		file
+      format:		domains
+      filename:		/var/tmp/dnstapir/1M.names
+#      filename:		/var/tmp/dnstapir/500.names
+   dawg1:
+      active:		false
+      name:		well-known-domains
+      description:	"Locally maintained whitelisted domain names"
+      type:		whitelist
+      source:		file	
+      format:		dawg		# domains | dawg
+      filename:		/var/tmp/dnstapir/well-known-domains.dawg
+   wellknowndomains:
+      active:		false
+      name:		wkdlist
+      description:	"External list of 10M whitelisted domain names"
+      type:		whitelist
+      source:		http	
+      format:		csv		# domains | dawg | csv
+      url:		https://www.domcop.com/files/top
+      outfile:		/var/tmp/dnstapir/well-known-domains.new.dawg
+   inactive_source:
+      active:		false
+      name:		pelle
+      description:	This source is not used
+      type:		greylist
+      format:		rpz
+      zone:		rpz.zone
+      source:		xfr
+      upstream:		10.1.2.3:53
+      tsig:		...
+   black_1:
+      active:		false
+      name:		blacker-than-thou
+      description:	Black, blacker, blackest
+      type:		blacklist
+      format:		rpz
+      zone:		rpz.zone
+      source:		xfr
+      upstream:		10.1.2.3:53
+      tsig:		...
+

@@ -66,6 +66,35 @@ services:
     depends_on:
      edm-init:
        condition: service_completed_successfully
-
+  pop:
+    image: leons-tapir-pop
+    volumes:
+      - ./pop/etc/pop-globalconfig.yaml:/etc/dnstapir/pop-globalconfig.yaml
+      - ./pop/etc/pop-outputs.yaml:/etc/dnstapir/pop-outputs.yaml
+      - ./pop/etc/pop-policy.yaml:/etc/dnstapir/pop-policy.yaml
+      - ./pop/etc/pop-sources.yaml:/etc/dnstapir/pop-sources.yaml
+      - ./pop/etc/rpz-serial.txt:/etc/dnstapir/rpz-serial.txt
+      - ./pop/etc/tapir-pop.yaml:/etc/dnstapir/tapir-pop.yaml
+      - ./pop/var/tmp/local-feed.txt:/var/tmp/dnstapir/local-feed.txt
+      - ./pop/var/tmp/local-whitelist.txt:/var/tmp/dnstapir/local-whitelist.txt
+      - ./pop/var/log:/var/log/dnstapir
+      - ./keys/ca.crt:/etc/dnstapir/certs/ca.crt
+      - ./keys/jws.key:/etc/dnstapir/certs/jws.key
+      - ./keys/mqtt.tem.general.validatorkey.pem:/etc/dnstapir/certs/jws-public.key
+      - ./keys/tls.crt:/etc/dnstapir/certs/tls.crt
+      - ./keys/tls.key:/etc/dnstapir/certs/tls.key
+      - ./keys/tls.crt:/etc/dnstapir/certs/tapir-pop.crt # Ugly hack because POP has this name hardcoded in the source
+      - ./keys/tls.key:/etc/dnstapir/certs/tapir-pop.key # Ugly hack because POP has this name hardcoded in the source
+      - ./tapir-cli/etc/tapir-cli.yaml:/etc/dnstapir/tapir-cli.yaml
+    networks:
+      internal:
+        ipv4_address: 10.53.0.100
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+    command:
+      - /usr/local/libexec/tapir-pop
+      - -v
 volumes:
   edm-data:

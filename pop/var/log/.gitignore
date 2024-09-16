@@ -1,0 +1,3 @@
+# Ignore tapir log (one log file is actually commited because POP gets angry if
+# it is not there when POP starts
+*.log

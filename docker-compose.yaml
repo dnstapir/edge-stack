@@ -48,8 +48,8 @@ services:
      - --minimiser-workers=3
      - --disable-session-files
      - --disable-histogram-sender
-     - --config=/etc/dnstapir/edm/edm.toml
-     - --well-known-domains=/etc/dnstapir/edm/well-known-domains.dawg
+     - --config-file=/etc/dnstapir/edm/edm.toml
+     - --well-known-domains-file=/etc/dnstapir/edm/well-known-domains.dawg
      - --mqtt-signing-key-file=/etc/dnstapir/keys/jws.key
      - --mqtt-signing-key-id=${NAME}
      - --mqtt-ca-file=/etc/dnstapir/keys/ca.crt
